@@ -1,0 +1,57 @@
+# Exploratory data analysis
+
+```{r, echo = FALSE, message = FALSE}
+source(here::here("scripts/setup.R"))
+```
+
+### *Data Description*
+#### *Table 1*
+```{r}
+userdataset <- read.csv(here::here("data/users.dataset.public.csv"))
+
+```
+
+```{r}
+#missing value
+check_na <- sum(is.na(userdataset))
+check_na
+```
+#kable
+```{r}
+head(userdataset)
+```
+
+```{r}
+summary(userdataset[,-1])
+```
+```{r}
+userdataset[,2] <- as.character(userdataset[,2])
+```
+
+#char
+# check masocia, creat all characters then combine all
+
+
+#p.country <- ggplot(data= c.country)+
+#  geom_mosaic(aes(x = country), fill= country_number)
+```{r}
+
+c.country <- userdataset %>% 
+  group_by(country) %>%
+  summarise(country_number = n())
+
+```
+```{r}
+ p.country <- ggplot(data = c.country,aes(x = country_number, 
+                                          y = country))+
+  geom_col()
+p.country
+```
+# numric
+# box chart 
+```{r}
+
+```
+
+#ggpair
+#pca (option)
