@@ -29,7 +29,7 @@ userdataset[,2] <- as.character(userdataset[,2])
 ```
 
 #char
-# check masocia, creat all characters then combine all
+# check mosaic, creat all characters then combine all
 
 
 #p.country <- ggplot(data= c.country)+
@@ -46,7 +46,15 @@ c.country <- userdataset %>%
                                           y = country))+
   geom_col()
 p.country
+
+
 ```
+```{r}
+library(ggmosaic)
+p.country <- ggplot(data= c.country)+
+  geom_mosaic(aes(x = "country"), fill= "country_number")
+```
+
 # numric
 # box chart 
 ```{r}
