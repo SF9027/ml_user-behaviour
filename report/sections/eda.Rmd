@@ -22,10 +22,19 @@ head(userdataset)
 ```
 
 ```{r}
+# replace some columns' type, can see the info clearer in the summary 
+userdataset[,2] <- as.character(userdataset[,2])
+userdataset[,"country"]<- as.factor(userdataset[,"country"])
+userdataset[,"hasAnyApp"]<- as.factor(userdataset[,"hasAnyApp"])
+userdataset[,"gender"]<- as.factor(userdataset[,"gender"])
+userdataset[,"hasAndroidApp"]<- as.factor(userdataset[,"hasAndroidApp"])
+userdataset[,"hasIosApp"]<- as.factor(userdataset[,"hasIosApp"])
+
 summary(userdataset[,-1])
 ```
+
 ```{r}
-userdataset[,2] <- as.character(userdataset[,2])
+
 ```
 
 #char
@@ -34,6 +43,7 @@ userdataset[,2] <- as.character(userdataset[,2])
 
 #p.country <- ggplot(data= c.country)+
 #  geom_mosaic(aes(x = country), fill= country_number)
+
 ```{r}
 
 c.country <- userdataset %>% 
@@ -41,18 +51,25 @@ c.country <- userdataset %>%
   summarise(country_number = n())
 
 ```
+
 ```{r}
  p.country <- ggplot(data = c.country,aes(x = country_number, 
                                           y = country))+
   geom_col()
 p.country
 
-
 ```
+
+# boolen
+
 ```{r}
-library(ggmosaic)
-p.country <- ggplot(data= c.country)+
-  geom_mosaic(aes(x = "country"), fill= "country_number")
+# library(ggmosaic) add it to setup
+
+# maybe not suit for this dataset 
+gender_hasapp <- ggplot2::ggplot(data= userdataset)+
+  geom_mosaic(aes(x = userdataset$hasAnyApp, conds = userdataset$gender, fill= hasIosApp))
+
+gender_hasapp 
 ```
 
 # numric

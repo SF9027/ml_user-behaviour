@@ -24,7 +24,7 @@ packages <- c(
   "here", # for the project's organization
   "tidyverse", "lubridate", # for wrangling
   "patchwork", "maps", "scales", # for plotting
-  "knitr", "kableExtra", "rmarkdown", # for the report
+  "knitr", "kableExtra", "rmarkdown", "ggmosaic", # for the report
   # "reticulate", # for using python
   "caret" # for the modelling part
 )
