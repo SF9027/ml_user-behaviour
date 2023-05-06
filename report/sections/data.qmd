@@ -1,11 +1,73 @@
 # Data
 
-* Sources
-* Description
-* Wrangling/cleaning
-* Spotting mistakes and missing data (could be part of EDA too)
-* Listing anomalies and outliers (could be part of EDA too)
+## Sources
 
 ```{r}
-# Example of a code block
+library(tidyverse)
+library(dplyr)
+
+userdataset <- read.csv(here::here("data/users.dataset.public.csv"))
+head(userdataset,10)
 ```
+
+## Description
+
+- identifierHash: Hash of the user's id
+
+- type: The type of entity
+
+- country: User's country (written in french)
+
+- language: The user's preferred language.
+
+- socialNbFollowers: Number of users who subscribed to this user's activity. New accounts are automatically followed by the store's official accounts.
+
+- socialNbFollows: Number of user account this user follows. New accounts are automatically assigned to follow the official partners.
+
+- socialProductsLiked: Number of products this user liked.
+
+- productsListed: Number of currently unsold products that this user has uploaded.
+
+- productsSold: Number of products this user has sold.
+
+- productsPassRate: % of products meeting the product description. (Sold products are reviewed by the store's team before being shipped to the buyer.)
+
+- productsWished: Number of products this user added to his/her wishlist.
+
+- productsBought: Number of products this user bought.
+
+- gender: user's gender
+
+- civilityGenderId: civility as integer
+
+- civilityTitle: Civility title
+
+- hasAnyApp: User has ever used any of the store's official app.
+
+- hasAndroidApp: User has ever used the official Android app.
+
+- hasIosApp: User has ever used the official iOS app.
+
+- hasProfilePicture: User has a custom profile picture.
+
+- daysSinceLastLogin: Number of days since the last login.
+
+- seniority: Number of days since the user registered.
+
+- seniorityAsMonths: see seniority. in months
+
+- seniorityAsYears: see seniority. in years
+
+- countryCode: user's country
+
+We use "daysSinceLastLogin" as an indicator for judging latent users. We set that users whose days since last login are greater than 180 days are latent users.
+
+
+
+
+-   Sources
+-   Description
+-   Wrangling/cleaning
+-   Spotting mistakes and missing data (could be part of EDA too)
+-   Listing anomalies and outliers (could be part of EDA too)
+

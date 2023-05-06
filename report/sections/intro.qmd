@@ -38,7 +38,9 @@ The main purpose of our project is to help e-commerce platform to predict whethe
 
 ## Fetures
 
-o identifierHash: unique identifier for each transaction o daysSinceLastLogin: how many days the user is offline
+o identifierHash: unique identifier for each transaction 
+
+o daysSinceLastLogin: how many days the user is offline
 
 o seniority: how long since the user registered
 
@@ -53,6 +55,10 @@ o Gender: gender of the users
 o Language: language user prefer to use on this platform
 
 o Country: user location
+
+We use "daysSinceLastLogin" as an indicator for judging latent users. We set that users whose days since last login are greater than 180 days are latent users.
+
+！！我们把距离上次登陆时间超过90天的用户称为潜水用户。我看了数据，距上次登录时间大于90天的用户有91928个，小于等于90天用户只有6986个。所以我建议这个时间可以再增加一点，比如180天这样。
 
 ## Instances
 

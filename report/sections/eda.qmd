@@ -1,5 +1,35 @@
 # Exploratory data analysis
 
+## Data Inspection
+```{r}
+# Missing Value
+check_na <- is.na(userdataset)
+sum(check_na)
+head(userdataset,10)
+
+# Replace some columns' type
+userdataset[,2] <- as.character(userdataset[,2])
+userdataset[,"country"]<- as.factor(userdataset[,"country"])
+userdataset[,"hasAnyApp"]<- as.factor(userdataset[,"hasAnyApp"])
+userdataset[,"gender"]<- as.factor(userdataset[,"gender"])
+userdataset[,"hasAndroidApp"]<- as.factor(userdataset[,"hasAndroidApp"])
+userdataset[,"hasIosApp"]<- as.factor(userdataset[,"hasIosApp"])
+
+summary(userdataset[,-1])
+###difference between 'summary(userdataset)' and 'summary(userdataset[,-1])' is lack "index".
+
+# Delete the duplicate colums
+###删除useless的元数据"identifierHash","type"; 删除重复列"country", "seniorityAsYears", "seniorityAsMonths", "civilityGenderId"。
+userds <- userdataset[,!colnames(userdataset) %in% c("identifierHash","type","country","seniorityAsYears","seniorityAsMonths", "civilityGenderId") ]
+
+
+```
+
+## Data description by using descriptive statistics and graphs
+
+
+
+
 * Mapping out the underlying structure
 * Identifying the most important variables
 * Univariate visualizations

@@ -72,8 +72,16 @@ gender_hasapp <- ggplot2::ggplot(data= userdataset)+
 gender_hasapp 
 ```
 
-# numric
-# box chart 
+# Numeric
+
+```{r}
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+```
+
+
+## box chart 
 ```{r}
 
 ```
