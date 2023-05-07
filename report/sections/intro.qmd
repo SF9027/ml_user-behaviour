@@ -1,6 +1,6 @@
 ---
 title: "Latent User Prediction"
-author: "GroupI: ZHiqi Feng, Shuangfei Li"
+author: "GroupI: Zhiqi Feng, Shuangfei Li"
 date: "08/05/2023"
 output:
   html_document:
@@ -13,10 +13,6 @@ output:
 ---
 
 # Introduction
-
-```{r, echo = FALSE, message = FALSE}
-source(here::here("scripts/setup.R"))
-```
 
 ## Context
 
