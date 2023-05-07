@@ -80,22 +80,22 @@ userdataset <- sample_n(userdataset_orig, 10000, replace = FALSE)
 
 Through checking the dataset, we found that the columns named "index", "identifierHash" and "type" do not make sense, so we decided to remove these columns.
 
-In addition, we found that the columns named "country" and "countryCode" both represent "country", so we removed the the "country" column.
+In addition, we found that the columns named "country" and "countryCode" both represent "country", so we removed the the "countryCode" column.
 
 Also, we found that the names "hasAnyApp", "hasAndroidApp", and "hasIosApp" express the same meaning. Since we are not looking at the difference between users using "Android app" and "Ios app", these two columns are meaningless to us. So we removed the columns named "hasAndroidApp" and "hasIosApp".
 
 Finally, we found that the columns named "civilityTitle" and "civilityGenderld" both represent "title". Because the data type of the "civilityTitle" column is character and the data type of the "civilityGenderId" column is numeric. So we removed the "civilityTitle" column.
 
-通过检查数据集，我们发现名为"identifierHash"和 "type"的列没有任何意义，所以我们决定删除这些列。
+通过检查数据集，我们发现名为"identifierHash"和"type"的列没有任何意义，所以我们决定删除这些列。
 
-此外，我们发现名为“country”和“countryCode”的列都是代表“国家”，所以我们移除了“country”列。
+此外，我们发现名为“country”和“countryCode”的列都是代表“国家”，所以我们移除了“countryCode”列。
 
 此外，我们发现名为“hasAnyApp”，"hasAndroidApp",和"hasIosApp"表达的意思是相同的。由于我们并不是要研究users使用“Android app”和“Ios app”的区别，这两列对我们没有意义。所以我们移除了名为"hasAndroidApp"和"hasIosApp" 的列。
 
 最后，我们发现名为"civilityTitle"和"civilityGenderld"的列都是代表“title”。因为“civilityTitle”列的数据类型为字符，“civilityGenderId”列的数据类型是数字的。所以我们移除了“civilityTitle”列。
 
 ```{r}
-userdataset <- userdataset %>% select(-2,-3, -16, -18, -19, -23, -24)
+userdataset <- userdataset %>% select(-2,-3, -16, -18, -19, -23, -24, -25)
 ```
 
 ### Data transform
@@ -175,12 +175,21 @@ From the dataset, we saw that the data for hasProfilePicture is logical value. S
 userdataset2$hasProfilePicture <- ifelse(userdataset2$hasProfilePicture == TRUE,1,0)
 ```
 
+### Remove unused column
+
+在经过数据梳理过后，我们最终得到了数据表“userdataset2”，在再次查看数据之后，我们发现在上述过程中，仍然存在不需要的列，我们要删掉它们。
+
+```{r}
+Userdataset <- userdataset2 %>% select(-1, -3, -12, -18, -24)
+```
+
+
 ## Missing value
 
 Through checking, there is no missing value in this dataset.
 
 ```{r}
-check_na <- is.na(userdataset2)
+check_na <- is.na(Userdataset)
 sum(check_na)
 ```
 
