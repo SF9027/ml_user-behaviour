@@ -70,10 +70,10 @@ We use "daysSinceLastLogin" as an indicator for judging latent users. We set tha
 
 ### Data selection
 
-由于数据过大，我们决定随机抽取1000个数据，创建一个新的数据集来进行后续工作。
+由于数据过大，我们决定随机抽取10000个数据，创建一个新的数据集来进行后续工作。
 
 ```{r}
-userdataset <- sample_n(userdataset_orig, 1000, replace = FALSE)
+userdataset <- sample_n(userdataset_orig, 10000, replace = FALSE)
 ```
 
 （delete the unuseful columns and the columns which express the same things）
@@ -86,7 +86,7 @@ Also, we found that the names "hasAnyApp", "hasAndroidApp", and "hasIosApp" expr
 
 Finally, we found that the columns named "civilityTitle" and "civilityGenderld" both represent "title". Because the data type of the "civilityTitle" column is character and the data type of the "civilityGenderId" column is numeric. So we removed the "civilityTitle" column.
 
-通过检查数据集，我们发现名为 "index"、"identifierHash"和 "type"的列没有任何意义，所以我们决定删除这些列。
+通过检查数据集，我们发现名为"identifierHash"和 "type"的列没有任何意义，所以我们决定删除这些列。
 
 此外，我们发现名为“country”和“countryCode”的列都是代表“国家”，所以我们移除了“country”列。
 
@@ -95,30 +95,34 @@ Finally, we found that the columns named "civilityTitle" and "civilityGenderld" 
 最后，我们发现名为"civilityTitle"和"civilityGenderld"的列都是代表“title”。因为“civilityTitle”列的数据类型为字符，“civilityGenderId”列的数据类型是数字的。所以我们移除了“civilityTitle”列。
 
 ```{r}
-userdataset <- userdataset %>% select(-1, -2,-3, -16, -18, -19, -23, -24)
+userdataset <- userdataset %>% select(-2,-3, -16, -18, -19, -23, -24)
 ```
 
 ### Data transform
 
 #### language
 
-From the dataset, we noticed that the data for language is character, like "en". It's difficult to use in setting model, so we transform it into number. We created 5 new columns based on this column, namely "langEn", "langFr", "langDe", "langEs" and "langIt". Then, according to the original data information, we judged whether the user uses this language as the first choice.
+From the dataset, we noticed that the data for language is character, like "en". It's difficult to use in setting model, so we transform it into number. 
+Firstly, we created a new dataframe, and then we created 5 new columns based on this column in the new dataframe, which were named "langEn", "langFr", "langDe", "langEs" and "langIt". Then, according to the original data information, we judged whether the user uses this language as the first choice, true for yes and false for no.
+Secondly, we used "0" for "False" and "1" for ""true.
 
-从数据集中，我们注意到语言的数据是字符，如"en"。这很难在设置模型中使用，所以我们将其转化为数字。我们在这个列的基础上创建了5个新的列，即"langEn"、"langFr"、"langDe"、"langEs "和"langIt"。然后，根据原始数据信息，我们判断用户是否将这种语言作为第一选择。
+从数据集中，我们注意到语言的数据是字符，如"en"。这很难在设置模型中使用，所以我们将其转化为数字。
+首先，我们创建了一个新的表格，在这个“language”列的基础上创建了5个新的列，即"langEn"、"langFr"、"langDe"、"langEs"和"langIt"。然后，根据原始数据信息，我们判断用户是否将这种语言作为第一选择。
+第二，
 
 ```{r}
 # 把字符型转变为对错。
 language <- userdataset %>%
-  select(language) %>%
+  select(index, language) %>%
   mutate(langEn = ifelse(language == "en", TRUE, FALSE),
          langFr = ifelse(language == "fr", TRUE, FALSE),
          langDe = ifelse(language == "de", TRUE, FALSE),
          langEs = ifelse(language == "es", TRUE, FALSE),
          langIt = ifelse(language == "it", TRUE, FALSE)) 
 
-userdataset1 <- merge(userdataset, language, by = "language")
+#错的代码，等我做完笔记再删除！userdataset1 <- merge(userdataset, language, by = "language")
+userdataset1 <- left_join(userdataset, language, by = "index")
 
-userdataset1 <- userdataset1 %>% select(-1)
 # 把对错改为数字型。0:False；1:True
 userdataset1$langEn <- ifelse(userdataset1$langEn == TRUE,1,0)
 userdataset1$langDe <- ifelse(userdataset1$langDe == TRUE,1,0)
@@ -130,15 +134,21 @@ userdataset1$langIt <- ifelse(userdataset1$langIt == TRUE,1,0)
 
 #### gender
 
-把对错改为数字型。
+From the dataset, we noticed that the data for gender is also character, like "F". So we use the method which the same one as we dealed with language. 
+We created a new dataframe, and then, we created 2 new columns based on this column in new dataframe, whcih were named "genderFemale" and "genderMale". We filled in this 2 columns with "ture" or "false" by the data in the column "gender".
+And then, we used "0" for "False" and "1" for ""true.
+
+从数据集中，我们注意到，gender的数据也是字符，如“F”，所以我们用了方法，which和处理“language”数据一样。
+我们新创了一个表格，并在该列的基础上，增加了新的2列，即“genderFemale”，“genderMale”。我们通过 "gender"一栏中的数据，在这两栏中填入 "ture "或 "false"。
+然后，我们用 "0 "表示 "假"，用 "1 "表示 "真"。
 
 ```{r}
-gender <- userdataset %>%
-  select(gender) %>%
+gender <- userdataset1 %>%
+  select(index, gender) %>%
   mutate(genderFamale = ifelse(gender == "F", TRUE, FALSE),
          genderMale = ifelse(gender == "M", TRUE, FALSE))
 
-userdataset2 <- merge(userdataset1, gender, by = "gender" )
+userdataset2 <- merge(userdataset1, gender, by = "index" )
 
 
 userdataset2$genderFamale <- ifelse(userdataset2$genderFamale == TRUE,1,0)
@@ -148,6 +158,8 @@ userdataset2$genderMale <- ifelse(userdataset2$genderMale == TRUE,1,0)
 
 #### hasAnyApp
 
+From the dataset, we saw that the data for hasAnyApp is logical value. So we used "0" for "False" and "1" for ""true.
+
 把对错改为数字型。0:False；1:True
 
 ```{r}
@@ -156,6 +168,7 @@ userdataset2$hasAnyApp <- ifelse(userdataset2$hasAnyApp == TRUE,1,0)
 
 #### hasProfilePicture
 
+From the dataset, we saw that the data for hasProfilePicture is logical value. So we used "0" for "False" and "1" for ""true.
 把对错改为数字型。0:False；1:True
 
 ```{r}
