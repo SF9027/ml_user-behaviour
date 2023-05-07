@@ -1,8 +1,8 @@
 ---
-title: My ML Project
+title: "Latent User Prediction"
 author:
- - Name I, First Name I
- - Name II, First Name II
+ - Shuangfei Li
+ - Zhiqi Feng
 institute : University of Lausanne
 date: today
 title-block-banner: "#0095C8"

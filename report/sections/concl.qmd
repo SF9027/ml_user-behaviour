@@ -1,5 +1,9 @@
 # Conclusion
 
+```{r, echo = FALSE, message = FALSE}
+source(here::here("scripts/setup.R"))
+```
+
 * Brief summary of the project
 * Take home message
 * Limitations

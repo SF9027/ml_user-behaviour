@@ -1,13 +1,17 @@
 # Data
 
-## Sources
+```{r, echo = FALSE, message = FALSE}
+source(here::here("scripts/setup.R"))
+```
+
+## Source
+
+We found a dataset about the user behavior of "global C2C fashion store" from the Kaggle Web.The dataset contains records of over 9 million registered users from successful online C2C fashion stores that were launched in Europe around 2009 and subsequently expanded globally. The link of this dataset is "https://www.kaggle.com/datasets/thedevastator/global-c2c-fashion-store-user-behaviour-analysis".
+
+我们从Kaggle网站上找到了一个有关"global C2C fashion store"用户行为的数据集。 该数据集包含来自 2009 年左右在欧洲推出并随后扩展到全球的成功在线 C2C 时尚商店的超过 900 万注册用户的记录。
 
 ```{r}
-library(tidyverse)
-library(dplyr)
-
-userdataset <- read.csv(here::here("data/users.dataset.public.csv"))
-head(userdataset,10)
+userdataset_orig <- read.csv(here::here("data/users.dataset.public.csv"))
 ```
 
 ## Description
@@ -38,7 +42,7 @@ head(userdataset,10)
 
 - gender: user's gender
 
-- civilityGenderId: civility as integer
+- civilityGenderId: civility title as integer, "1" means "mr", "2" means "mrs" and "3" means "miss".
 
 - civilityTitle: Civility title
 
@@ -62,7 +66,92 @@ head(userdataset,10)
 
 We use "daysSinceLastLogin" as an indicator for judging latent users. We set that users whose days since last login are greater than 180 days are latent users.
 
+## Cleaning
 
+### Data selection
+
+由于数据过大，我们决定随机抽取5000个数据，创建一个新的数据集来进行后续工作。
+
+```{r}
+userdataset <- sample_n(userdataset_orig, 5000, replace = FALSE)
+```
+
+（delete the unuseful columns and the columns which express the same things）
+
+Through checking the dataset, we found that the columns named "index", "identifierHash" and "type" do not make sense, so we decided to remove these columns.
+
+In addition, we found that the columns named "country" and "countryCode" both represent "country", so we removed the the "country" column.
+
+Also, we found that the names "hasAnyApp", "hasAndroidApp", and "hasIosApp" express the same meaning. Since we are not looking at the difference between users using "Android app" and "Ios app", these two columns are meaningless to us. So we removed the columns named "hasAndroidApp" and "hasIosApp".
+
+Finally, we found that the columns named "civilityTitle" and "civilityGenderld" both represent "title". Because the data type of the "civilityTitle" column is character and the data type of the "civilityGenderId" column is numeric. So we removed the "civilityTitle" column.
+
+通过检查数据集，我们发现名为 "index"、"identifierHash"和 "type"的列没有任何意义，所以我们决定删除这些列。
+
+此外，我们发现名为“country”和“countryCode”的列都是代表“国家”，所以我们移除了“country”列。
+
+此外，我们发现名为“hasAnyApp”，"hasAndroidApp",和"hasIosApp"表达的意思是相同的。由于我们并不是要研究users使用“Android app”和“Ios app”的区别，这两列对我们没有意义。所以我们移除了名为"hasAndroidApp"和"hasIosApp" 的列。
+
+最后，我们发现名为"civilityTitle"和"civilityGenderld"的列都是代表“title”。因为“civilityTitle”列的数据类型为字符，“civilityGenderId”列的数据类型是数字的。所以我们移除了“civilityTitle”列。
+
+```{r}
+userdataset <- userdataset %>% select(-1, -2,-3, -16, -18, -19, -23, -24)
+```
+
+### Data transform
+
+#### language
+
+From the dataset, we noticed that the data for language is character, like "en". It's difficult to use in setting model, so we transform it into number. We created 5 new columns based on this column, namely "langEn", "langFr", "langDe", "langEs" and "langIt". Then, according to the original data information, we judged whether the user uses this language as the first choice.
+
+从数据集中，我们注意到语言的数据是字符，如"en"。这很难在设置模型中使用，所以我们将其转化为数字。我们在这个列的基础上创建了5个新的列，即"langEn"、"langFr"、"langDe"、"langEs "和"langIt"。然后，根据原始数据信息，我们判断用户是否将这种语言作为第一选择。
+
+```{r}
+
+language <- userdataset %>%
+  select(language) %>%
+  mutate(langEn = ifelse(language == "en", TRUE, FALSE),
+         langFr = ifelse(language == "fr", TRUE, FALSE),
+         langDe = ifelse(language == "de", TRUE, FALSE),
+         langEs = ifelse(language == "es", TRUE, FALSE),
+         langIt = ifelse(language == "it", TRUE, FALSE)) 
+
+userdataset1 <- merge(userdataset, language, by = "language")
+
+```
+
+#### gender
+
+dv
+
+```{r}
+
+```
+
+#### hasAnyApp
+
+ddd
+
+```{r}
+
+```
+
+#### hasProfilePicture
+
+dsds
+
+```{r}
+
+```
+
+## Missing value
+
+Through checking, there is no missing value in this dataset.
+
+```{r}
+check_na <- is.na(userdataset)
+sum(check_na)
+```
 
 
 -   Sources

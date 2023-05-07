@@ -1,12 +1,39 @@
 # Exploratory data analysis
 
-## Data Inspection
-```{r}
-# Missing Value
-check_na <- is.na(userdataset)
-sum(check_na)
-head(userdataset,10)
+```{r, echo = FALSE, message = FALSE}
+source(here::here("scripts/setup.R"))
+```
 
+```{r}
+install.packages("summarytools")
+library(summarytools)
+library(DataExplorer)
+```
+
+
+## Data inspection
+
+### Data check
+
+```{r}
+str(userdataset)
+summary(userdataset)
+
+print(dfSummary(userdataset,style="grid",
+                plain.ascii = FALSE, 
+                tmp.img.dir = "/tmp",
+                graph.magnif = 0.8),
+      method = "render")
+
+```
+
+### Data modification
+
+we will using graphics and visualizations to explore and analyze the dataset (EDA) first and to see if we need to combine with another dataset (named: Buyers-repartition-by-country ), to try to link with user's country, topbuyers and other variables.
+
+### Data Attribute Modification
+
+```{r}
 # Replace some columns' type
 userdataset[,2] <- as.character(userdataset[,2])
 userdataset[,"country"]<- as.factor(userdataset[,"country"])
@@ -22,10 +49,28 @@ summary(userdataset[,-1])
 ###删除useless的元数据"identifierHash","type"; 删除重复列"country", "seniorityAsYears", "seniorityAsMonths", "civilityGenderId"。
 userds <- userdataset[,!colnames(userdataset) %in% c("identifierHash","type","country","seniorityAsYears","seniorityAsMonths", "civilityGenderId") ]
 
+```
+
+```{r}
 
 ```
 
+
 ## Data description by using descriptive statistics and graphs
+
+### Graphs for numeric variables
+
+```{r}
+
+```
+
+### Graphs for non-numeric variables
+
+```{r}
+
+```
+
+## Examination of the relationship between variables
 
 
 

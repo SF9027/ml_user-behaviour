@@ -1,5 +1,9 @@
 # Supervised learning
 
+```{r, echo = FALSE, message = FALSE}
+source(here::here("scripts/setup.R"))
+```
+
 * Data splitting (if a training/test set split is enough for the global analysis, at least one CV or bootstrap must be used)
 * Two or more models 
 * Two or more scores
