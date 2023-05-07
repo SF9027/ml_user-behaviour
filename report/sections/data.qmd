@@ -70,10 +70,10 @@ We use "daysSinceLastLogin" as an indicator for judging latent users. We set tha
 
 ### Data selection
 
-由于数据过大，我们决定随机抽取5000个数据，创建一个新的数据集来进行后续工作。
+由于数据过大，我们决定随机抽取1000个数据，创建一个新的数据集来进行后续工作。
 
 ```{r}
-userdataset <- sample_n(userdataset_orig, 5000, replace = FALSE)
+userdataset <- sample_n(userdataset_orig, 1000, replace = FALSE)
 ```
 
 （delete the unuseful columns and the columns which express the same things）
@@ -107,7 +107,7 @@ From the dataset, we noticed that the data for language is character, like "en".
 从数据集中，我们注意到语言的数据是字符，如"en"。这很难在设置模型中使用，所以我们将其转化为数字。我们在这个列的基础上创建了5个新的列，即"langEn"、"langFr"、"langDe"、"langEs "和"langIt"。然后，根据原始数据信息，我们判断用户是否将这种语言作为第一选择。
 
 ```{r}
-
+# 把字符型转变为对错。
 language <- userdataset %>%
   select(language) %>%
   mutate(langEn = ifelse(language == "en", TRUE, FALSE),
@@ -118,30 +118,48 @@ language <- userdataset %>%
 
 userdataset1 <- merge(userdataset, language, by = "language")
 
+userdataset1 <- userdataset1 %>% select(-1)
+# 把对错改为数字型。0:False；1:True
+userdataset1$langEn <- ifelse(userdataset1$langEn == TRUE,1,0)
+userdataset1$langDe <- ifelse(userdataset1$langDe == TRUE,1,0)
+userdataset1$langFr <- ifelse(userdataset1$langFr == TRUE,1,0)
+userdataset1$langEs <- ifelse(userdataset1$langEs == TRUE,1,0)
+userdataset1$langIt <- ifelse(userdataset1$langIt == TRUE,1,0)
+
 ```
 
 #### gender
 
-dv
+把对错改为数字型。
 
 ```{r}
+gender <- userdataset %>%
+  select(gender) %>%
+  mutate(genderFamale = ifelse(gender == "F", TRUE, FALSE),
+         genderMale = ifelse(gender == "M", TRUE, FALSE))
+
+userdataset2 <- merge(userdataset1, gender, by = "gender" )
+
+
+userdataset2$genderFamale <- ifelse(userdataset2$genderFamale == TRUE,1,0)
+userdataset2$genderMale <- ifelse(userdataset2$genderMale == TRUE,1,0)
 
 ```
 
 #### hasAnyApp
 
-ddd
+把对错改为数字型。0:False；1:True
 
 ```{r}
-
+userdataset2$hasAnyApp <- ifelse(userdataset2$hasAnyApp == TRUE,1,0)
 ```
 
 #### hasProfilePicture
 
-dsds
+把对错改为数字型。0:False；1:True
 
 ```{r}
-
+userdataset2$hasProfilePicture <- ifelse(userdataset2$hasProfilePicture == TRUE,1,0)
 ```
 
 ## Missing value
@@ -149,7 +167,7 @@ dsds
 Through checking, there is no missing value in this dataset.
 
 ```{r}
-check_na <- is.na(userdataset)
+check_na <- is.na(userdataset2)
 sum(check_na)
 ```
 
