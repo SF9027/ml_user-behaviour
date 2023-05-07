@@ -16,18 +16,48 @@ output:
 
 ## Context
 
-With the growth of the web, more and more of people's daily activities can be done online (such as online shopping), so e-commerce has become an integral part of our lives. However, since the web comes with so many unknowns, understanding user behavior is the key to success in this domain.
+With the rapidly growth of the internet, online activities (such as online shopping) become more and more popular, e-commerce starts being an integral part of our lives. With so many unknown factors that come with not only selling but also providing good customer service, it is the key to success for companies to understand consumer preferences and behavior on the e-commerce platform in order to grow their business.
 
-We want to contribute to this, so our project focuses on the e-commerce industry. We work on learning the user behavior of e-commerce platform users based on the data from the e-commerce platform.
+Therefore, our project aims to learn customers behavior based on the data collected from an online C2C fashion store launched in Europe around 2009 and to make a prediction of user latency in terms of improving user activities on e-commerce platform.
 
-随着网络的发展，人们越来越多的日常活动都可以在网上（比如网购），所以电子商务已经成为我们生活中不可或缺的一部分。但是，由于网络伴随着如此多的未知因素，因此，了解用户行为是在该领域取得成功的关键。 我们想要为此做出贡献，所以我们的项目集中在电子商务领域。我们致力于研究电商平台使用者的用户行为，基于电商平台的数据。
+## Data Source
+
+We found a dataset about the user behavior of "an online global C2C fashion store" from Kaggle Web.The dataset contains records on over 9 million registered users from this online store and subsequently expanded globally. The link of this dataset is "https://www.kaggle.com/datasets/thedevastator/global-c2c-fashion-store-user-behaviour-analysis".
+
 
 ## Objective
 
-The main purpose of our project is to help e-commerce platform to predict whether users using the platform are latent or not. And then the platform can use our results to develop appropriate strategies for that type of users, thus increasing the user activity of that platform.
+The main purpose of our project is to predict whether users are latent on this platform, so that after this E-commerce platform can take measures to improve the user activities according to our research result.
 
-我们项目的主要目的是帮助电子商务平台预测使用该平台的用户是否潜伏。然后平台可以根据我们的结果，针对该类型的用户制定相应的策略，从而提高该平台的用户活跃度。
+# Data Description
 
+## Features
+
+o identifierHash: unique identifier for each transaction 
+
+o daysSinceLastLogin: how many days the user is offline
+
+o seniority: how long since the user registered
+
+o HasAnyApp: user has applications
+
+o HasAndroidApp: user has android application
+
+o HasIosApp: user has IOS application
+
+o Gender: gender of the users
+
+o Language: language user prefer to use on this platform
+
+o Country: user location
+
+## The instances
+
+The dataset contains user data of 98,912 instances, where each instance represents a user with a purchase record.
+
+## Data Modification
+
+We will use graphics and visualizations to explore and analyze the dataset (EDA) first and to see if we need to combine with another dataset (named: Buyers-repartition-by-country ), to try to link with user's country, topbuyers and other variables.
 
 # Planned Analysis
 
