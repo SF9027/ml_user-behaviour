@@ -15,10 +15,10 @@ library(DataExplorer)
 ### Data check
 
 ```{r}
-str(userdataset)
-summary(userdataset)
+str(Userdataset)
+summary(Userdataset)
 
-print(dfSummary(userdataset,style="grid",
+print(dfSummary(Userdataset,style="grid",
                 plain.ascii = FALSE, 
                 tmp.img.dir = "/tmp",
                 graph.magnif = 0.8),
@@ -26,51 +26,212 @@ print(dfSummary(userdataset,style="grid",
 
 ```
 
-### Data modification
-
-we will using graphics and visualizations to explore and analyze the dataset (EDA) first and to see if we need to combine with another dataset (named: Buyers-repartition-by-country ), to try to link with user's country, topbuyers and other variables.
-
 ### Data Attribute Modification
 
-```{r}
-# Replace some columns' type
-userdataset[,2] <- as.character(userdataset[,2])
-userdataset[,"country"]<- as.factor(userdataset[,"country"])
-userdataset[,"hasAnyApp"]<- as.factor(userdataset[,"hasAnyApp"])
-userdataset[,"gender"]<- as.factor(userdataset[,"gender"])
-userdataset[,"hasAndroidApp"]<- as.factor(userdataset[,"hasAndroidApp"])
-userdataset[,"hasIosApp"]<- as.factor(userdataset[,"hasIosApp"])
-
-summary(userdataset[,-1])
-###difference between 'summary(userdataset)' and 'summary(userdataset[,-1])' is lack "index".
-
-# Delete the duplicate colums
-###删除useless的元数据"identifierHash","type"; 删除重复列"country", "seniorityAsYears", "seniorityAsMonths", "civilityGenderId"。
-userds <- userdataset[,!colnames(userdataset) %in% c("identifierHash","type","country","seniorityAsYears","seniorityAsMonths", "civilityGenderId") ]
-
-```
+我们把数据表中的数据分为了2大类，numeric和factor。我们将"country","civilityGenderId","hasAnyApp","hasProfilePicture","langEn","langFr","langDe","langEs","langIt","genderFamale","genderMale"这些列的attribute从numeric改为factor。剩余的列的attribute从integer变为numeric。
 
 ```{r}
+library(purrr)
+library(dplyr)
+library(DT)
+
+Userdataset <- as.data.frame(Userdataset)
+
+Userdataset_factor <- Userdataset %>% select(1, 10, 11, 12, 15,16,17,18,19, 20, 21) %>% colnames()
+for(i in Userdataset_factor){
+    Userdataset[,i] <- as.factor(Userdataset[,i])
+} 
+
+Userdataset_numeric <- Userdataset %>% select(2, 3, 4, 5, 6, 8, 9, 14) %>% colnames()
+for(i in Userdataset_numeric){
+    Userdataset[,i] <- as.numeric(Userdataset[,i])
+} 
+
+        
+Userdataset %>% datatable(rownames = FALSE,
+                     option = list(scrollX = T,
+                                   pageLength = 5))
+
+str(Userdataset)
 
 ```
-
 
 ## Data description by using descriptive statistics and graphs
 
-### Graphs for numeric variables
+### Graphs for "latent"
+
+The goal of our project is to build the model to predit whether users are latent on this platform. So here we do a comparison of users with latent statu and non-latent statu.
 
 ```{r}
 
+latent <- Userdataset %>% ggplot(mapping = aes(x=latent,fill=latent))+geom_bar()+scale_color_identity()
+latent
+
 ```
+从图中可以看出，数据结构极度不平衡。但造成该图的结果，可能是由于我们随机筛选造成的，对此，我们会尝试使用分组筛选。
+
+### Graphs for numeric variables
+
+#### Bar-chart
+
+```{r}
+#Continuous Variables
+
+Userdataset %>% select(productsPassRate) %>% 
+keep(is.numeric) %>% 
+  gather() %>% 
+  ggplot(aes(value)) +
+  facet_wrap(~ key, scales = "free") +
+  geom_histogram()
+
+```
+因为大部分user都没有该项数据，所以如图所示，数据极度不平衡。
+
+```{r}
+#Discrete variables
+
+Userdataset %>% select(2, 3, 4, 5, 6, 8, 9, 14) %>% 
+  keep(is.numeric) %>% 
+  gather() %>% 
+  ggplot(aes(value)) +
+  facet_wrap(~ key, scales = "free") +
+  geom_bar()
+
+```
+
+#### Box chart 
+
+```{r}
+
+Userdataset %>% select(2, 3, 4, 5, 6, 7, 8, 9, 14) %>% 
+  keep(is.numeric) %>% 
+  gather() %>% 
+  ggplot(aes(value)) +
+  facet_wrap(~ key, scales = "free") +
+  geom_boxplot()
+
+```
+
 
 ### Graphs for non-numeric variables
 
+#### Graph for country variables
+
 ```{r}
+
+country <- Userdataset %>% 
+  group_by(country) %>%
+  summarise(country_number = n())
+
+ p1 <- ggplot(data = country,aes(x = country_number, y = country))+
+  geom_col()
+p1
 
 ```
 
+
+```{r}
+
+# 删掉
+mosaicplot(country_number ~ country, data = country, color = "blue", main = "Mosaic Plot of Countries")
+
+```
+
+
+#### Graph for language variables
+
+```{r}
+
+a <- unlist(Userdataset$langEn) 
+langEn <- sum(a=="1")
+b <- unlist(Userdataset$langFr) 
+langFr <- sum(b=="1")
+c <- unlist(Userdataset$langDe) 
+langDe <- sum(c=="1")
+d <- unlist(Userdataset$langEs) 
+langEs <- sum(d=="1")
+e <- unlist(Userdataset$langIt)
+langIt <- sum(e=="1")
+
+language1 <- c("langEn","langFr","LangDe","langEs","langIt")
+number <- c(langEn,langFr,langDe,langEs,langIt)
+LANGUAGE_DATA <- data.frame(language1,number)
+p2 <- ggplot(LANGUAGE_DATA,aes(x=reorder(language1,number),y=number,fill=language1))+geom_col()+
+  geom_text(aes(label = number), vjust = 1.5, colour = "white", position = position_dodge(.9), size = 5)
+p2
+
+```
+
+#### Graph for gender varibles
+
+```{r}
+
+f <- unlist(Userdataset$genderFamale) 
+genderFamale <- sum(f=="1")
+g <- unlist(Userdataset$genderMale) 
+genderMale <- sum(g=="1")
+
+gender1 <- c("genderFamale", "genderMale")
+number1 <- c(genderFamale,genderMale)
+GENDER_DATA <- data.frame(gender1,number1)
+p3 <- ggplot(GENDER_DATA,aes(x=reorder(gender1,number1),y=number1,fill=gender1))+geom_col()+
+  geom_text(aes(label = number1), vjust = 1.5, colour = "white", position = position_dodge(.9), size = 5)
+p3
+
+```
+
+#### Graph for other variables
+
+```{r}
+
+Userdataset %>% select(civilityGenderId, hasAnyApp, hasProfilePicture) %>% 
+  gather() %>% 
+  ggplot(aes(value)) +
+  facet_wrap(~ key, scales = "free") +
+  geom_bar()
+
+```
+
+#### Box plot
+
+```{r}
+
+Userdataset %>% select(10, 11, 12, 15,16,17,18,19, 20, 21) %>% 
+  keep(is.factor) %>% 
+  gather() %>% 
+  ggplot(aes(value)) +
+  facet_wrap(~ key, scales = "free") +
+  geom_boxplot()
+
+
+```
+
+
 ## Examination of the relationship between variables
 
+To observe the relationship between all of the variables, we made the "Correlation plot" and "Multivariate correlation scatter matrix plots" for numeric data.
+
+and "Mosaic chart" for Non-numeric data.
+
+### Multivariate correlation scatter matrix plots - Nurmeric
+
+```{r}
+library(GGally)
+
+Userdataset %>% select(2, 3, 4, 5, 6, 8, 9, 13, 14) %>% ggpairs()
+
+```
+
+### Correlation plot - Numeric
+
+```{r}
+
+UserdatasetP <- Userdataset %>% select(,-22,-13)
+plot_correlation(UserdatasetP, type= 'c', cor_args = list( 'use' = 'complete.obs'))
+
+```
+
+### Correlation matrix plot
 
 
 

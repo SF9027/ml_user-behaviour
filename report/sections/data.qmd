@@ -70,10 +70,10 @@ We use "daysSinceLastLogin" as an indicator for judging latent users. We set tha
 
 ### Data selection
 
-由于数据过大，我们决定随机抽取10000个数据，创建一个新的数据集来进行后续工作。
+由于数据过大，我们决定随机抽取30000个数据，创建一个新的数据集来进行后续工作。
 
 ```{r}
-userdataset <- sample_n(userdataset_orig, 10000, replace = FALSE)
+userdataset <- sample_n(userdataset_orig, 30000, replace = FALSE)
 ```
 
 （delete the unuseful columns and the columns which express the same things）
@@ -163,7 +163,7 @@ From the dataset, we saw that the data for hasAnyApp is logical value. So we use
 把对错改为数字型。0:False；1:True
 
 ```{r}
-userdataset2$hasAnyApp <- ifelse(userdataset2$hasAnyApp == TRUE,1,0)
+userdataset2$hasAnyApp <- ifelse(userdataset2$hasAnyApp == "True",1,0)
 ```
 
 #### hasProfilePicture
@@ -172,8 +172,18 @@ From the dataset, we saw that the data for hasProfilePicture is logical value. S
 把对错改为数字型。0:False；1:True
 
 ```{r}
-userdataset2$hasProfilePicture <- ifelse(userdataset2$hasProfilePicture == TRUE,1,0)
+userdataset2$hasProfilePicture <- ifelse(userdataset2$hasProfilePicture == "True",1,0)
 ```
+
+#### latent
+
+The basis for determining whether a user is latent or not is "days since last login".根据daysSinceLastLogin,我们把大于180天的user判定为latent，否则为非latent。然后再把它转变为数字型。0:False；1:True
+
+```{r}
+userdataset2$latent <- ifelse(userdataset2$daysSinceLastLogin>180, TRUE, FALSE)
+userdataset2$latent <- ifelse(userdataset2$latent == TRUE,1,0)
+```
+
 
 ### Remove unused column
 
