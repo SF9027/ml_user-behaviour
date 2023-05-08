@@ -314,4 +314,4 @@ Questions:
 3. In the section of displaying numeric data, we consider the results of bar-chart and box-chart are not very good. Do you have any suggestions for visualization? For example, what other charts can be used to better display numeric data?
 
 
-2.According to eda, we noticed the correlation between many variables is not very strong, and we are afraid it will be difficult to work the project out. Do you have any suggestions for the next steps?
+4.According to eda, we noticed the correlation between many variables is not very strong, and we are afraid it will be difficult to work the project out. Do you have any suggestions for the next steps?
