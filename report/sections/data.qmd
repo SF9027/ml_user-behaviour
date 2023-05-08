@@ -97,7 +97,7 @@ According to the dataset, we noticed that "language" is a character data, for ex
 Firstly, we created a new dataframe, and we created 5 new columns based on this column which we named them "langEn", "langFr", "langDe", "langEs" and "langIt". Secondly, we considered whether the user chooses the language as their first language based on the raw data, true for yes and false for no. And we determined "0" for "False", "1" for ""true.
 
 ```{r}
-# 把字符型转变为对错。
+
 language <- userdataset %>%
   select(index, language) %>%
   mutate(langEn = ifelse(language == "en", TRUE, FALSE),
@@ -106,10 +106,8 @@ language <- userdataset %>%
          langEs = ifelse(language == "es", TRUE, FALSE),
          langIt = ifelse(language == "it", TRUE, FALSE)) 
 
-#错的代码，等我做完笔记再删除！userdataset1 <- merge(userdataset, language, by = "language")
 userdataset1 <- left_join(userdataset, language, by = "index")
 
-# 把对错改为数字型。0:False；1:True
 userdataset1$langEn <- ifelse(userdataset1$langEn == TRUE,1,0)
 userdataset1$langDe <- ifelse(userdataset1$langDe == TRUE,1,0)
 userdataset1$langFr <- ifelse(userdataset1$langFr == TRUE,1,0)

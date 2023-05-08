@@ -293,10 +293,13 @@ for (i in 1:11){
 # Next step
 
 About the data:
+
 1. Due to the large size of original dataset, running memory was insufficient during data processing, so we randomly filtered the data for analysis. In order to ensure the structure of the data is consistent with the original dataset, we decided to use group sampling (considering countries as a grouping criteria) to select the data.
+
 2. Whether the original data or the data we selected, there are a large amount number of latent users. In order to obtain more accurate research results, we will consider to segment user types (set refinement indicators) in the next step, such as latent users belong to the value of daysSinceLastLogin between [90, 365]. While those who have not logged in for more than 365 days will be regarded as missing user. Which means they will not log in to this website by default in the future, so that there is no need to deal with them.
 
 Questions:
+
 1. When processing the data, considering that we will use different models after, we replaced all text data by numbers. Is this necessary to do so? 
 
 2. For the country column, we keep them as "character" due to the large number of countries counts. What if it do not support the "character" data when we set models after, how should we deal with the data of the "country" column?
