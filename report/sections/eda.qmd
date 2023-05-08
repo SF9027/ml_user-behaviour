@@ -165,14 +165,6 @@ print(country_heatmap)
 ```
 From the map, we can see that the users of this C2C website are located very scattered, mainly in North America, Europe, West Asia and South Africa. Among them, most user accounts come from European.
 
-```{r, message=FALSE, echo=FALSE}
-
-# mosaic plot 删掉
-
-mosaicplot(user_count ~ country, data = country, color = "blue", main = "Mosaic Plot of Countries")
-
-```
-
 #### Graph for language variables
 
 Considering languages, we display this variable by using histograms.
@@ -299,7 +291,6 @@ for (i in 1:24){
 
 ```
 
-
 # Next step
 
 About the data:
@@ -312,6 +303,5 @@ Questions:
 2. For the country column, we keep them as "character" due to the large number of countries counts. What if it do not support the "character" data when we set models after, how should we deal with the data of the "country" column?
 
 3. In the section of displaying numeric data, we consider the results of bar-chart and box-chart are not very good. Do you have any suggestions for visualization? For example, what other charts can be used to better display numeric data?
-
 
 4.According to eda, we noticed the correlation between many variables is not very strong, and we are afraid it will be difficult to work the project out. Do you have any suggestions for the next steps?
