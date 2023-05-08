@@ -6,9 +6,7 @@ source(here::here("scripts/setup.R"))
 
 ## Source
 
-We found a dataset about the user behavior of "global C2C fashion store" from the Kaggle Web.The dataset contains records of over 9 million registered users from successful online C2C fashion stores that were launched in Europe around 2009 and subsequently expanded globally. The link of this dataset is "https://www.kaggle.com/datasets/thedevastator/global-c2c-fashion-store-user-behaviour-analysis".
-
-我们从Kaggle网站上找到了一个有关"global C2C fashion store"用户行为的数据集。 该数据集包含来自 2009 年左右在欧洲推出并随后扩展到全球的成功在线 C2C 时尚商店的超过 900 万注册用户的记录。
+We found a dataset about the user behavior of "global C2C online fashion store" from Kaggle Web.The dataset contains records of over 9 million registered users fromthis successful online C2C fashion store that were launched in Europe around 2009 and subsequently expanded globally. The link of this dataset is "https://www.kaggle.com/datasets/thedevastator/global-c2c-fashion-store-user-behaviour-analysis".
 
 ```{r}
 userdataset_orig <- read.csv(here::here("data/users.dataset.public.csv"))
@@ -64,35 +62,27 @@ userdataset_orig <- read.csv(here::here("data/users.dataset.public.csv"))
 
 - countryCode: user's country
 
-We use "daysSinceLastLogin" as an indicator for judging latent users. We set that users whose days since last login are greater than 180 days are latent users.
+We defined "daysSinceLastLogin" as an indicator of latent users. We assume that users whose days since last login are greater than 180 days are latent users.
 
 ## Cleaning
 
 ### Data selection
 
-由于数据过大，我们决定随机抽取30000个数据，创建一个新的数据集来进行后续工作。
+Due to the large amount of data, we decided to randomly select 30,000 data and create a new dataset for the prediction.
 
 ```{r}
 userdataset <- sample_n(userdataset_orig, 30000, replace = FALSE)
 ```
 
-（delete the unuseful columns and the columns which express the same things）
+（delete the usefulness columns and the columns express the same things）
 
-Through checking the dataset, we found that the columns named "index", "identifierHash" and "type" do not make sense, so we decided to remove these columns.
+By inspecting the dataset, we found that the columns named "index", "identifierHash" and "type" do not make sense, so we decided to remove these columns.
 
-In addition, we found that the columns named "country" and "countryCode" both represent "country", so we removed the the "countryCode" column.
+In addition, the columns named "country" and "countryCode" have the same meaning, so we kept only the column "country".
 
-Also, we found that the names "hasAnyApp", "hasAndroidApp", and "hasIosApp" express the same meaning. Since we are not looking at the difference between users using "Android app" and "Ios app", these two columns are meaningless to us. So we removed the columns named "hasAndroidApp" and "hasIosApp".
+Then, we noticed that character variable "hasAnyApp" is equal to "hasAndroidApp" plus "hasIosApp". Since we are not looking at the difference between users using "Android app" and "Ios app", these two columns are meaningless to us. Therefore we removed the columns "hasAndroidApp" and "hasIosApp".
 
-Finally, we found that the columns named "civilityTitle" and "civilityGenderld" both represent "title". Because the data type of the "civilityTitle" column is character and the data type of the "civilityGenderId" column is numeric. So we removed the "civilityTitle" column.
-
-通过检查数据集，我们发现名为"identifierHash"和"type"的列没有任何意义，所以我们决定删除这些列。
-
-此外，我们发现名为“country”和“countryCode”的列都是代表“国家”，所以我们移除了“countryCode”列。
-
-此外，我们发现名为“hasAnyApp”，"hasAndroidApp",和"hasIosApp"表达的意思是相同的。由于我们并不是要研究users使用“Android app”和“Ios app”的区别，这两列对我们没有意义。所以我们移除了名为"hasAndroidApp"和"hasIosApp" 的列。
-
-最后，我们发现名为"civilityTitle"和"civilityGenderld"的列都是代表“title”。因为“civilityTitle”列的数据类型为字符，“civilityGenderId”列的数据类型是数字的。所以我们移除了“civilityTitle”列。
+Finally, the columns "civilityTitle" and "civilityGenderld" both represent "title". As the data type of the "civilityTitle" column is character but the data type of the "civilityGenderId" column is numeric, we prefered to keep numeric data type which is "civilityGenderId".
 
 ```{r}
 userdataset <- userdataset %>% select(-2,-3, -16, -18, -19, -23, -24, -25)
@@ -102,13 +92,9 @@ userdataset <- userdataset %>% select(-2,-3, -16, -18, -19, -23, -24, -25)
 
 #### language
 
-From the dataset, we noticed that the data for language is character, like "en". It's difficult to use in setting model, so we transform it into number. 
-Firstly, we created a new dataframe, and then we created 5 new columns based on this column in the new dataframe, which were named "langEn", "langFr", "langDe", "langEs" and "langIt". Then, according to the original data information, we judged whether the user uses this language as the first choice, true for yes and false for no.
-Secondly, we used "0" for "False" and "1" for ""true.
+According to the dataset, we noticed that "language" is a character data, for example "en" which is difficult to be used in the setting models. Hence we transformed it into a numeric data.
 
-从数据集中，我们注意到语言的数据是字符，如"en"。这很难在设置模型中使用，所以我们将其转化为数字。
-首先，我们创建了一个新的表格，在这个“language”列的基础上创建了5个新的列，即"langEn"、"langFr"、"langDe"、"langEs"和"langIt"。然后，根据原始数据信息，我们判断用户是否将这种语言作为第一选择。
-第二，
+Firstly, we created a new dataframe, and we created 5 new columns based on this column which we named them "langEn", "langFr", "langDe", "langEs" and "langIt". Secondly, we considered whether the user chooses the language as their first language based on the raw data, true for yes and false for no. And we determined "0" for "False", "1" for ""true.
 
 ```{r}
 # 把字符型转变为对错。
@@ -134,13 +120,9 @@ userdataset1$langIt <- ifelse(userdataset1$langIt == TRUE,1,0)
 
 #### gender
 
-From the dataset, we noticed that the data for gender is also character, like "F". So we use the method which the same one as we dealed with language. 
-We created a new dataframe, and then, we created 2 new columns based on this column in new dataframe, whcih were named "genderFemale" and "genderMale". We filled in this 2 columns with "ture" or "false" by the data in the column "gender".
-And then, we used "0" for "False" and "1" for ""true.
+We observed that the data of "gender" is also a character data, such as "F". So we processed the "gender" data the same way we did with the "language" data。
 
-从数据集中，我们注意到，gender的数据也是字符，如“F”，所以我们用了方法，which和处理“language”数据一样。
-我们新创了一个表格，并在该列的基础上，增加了新的2列，即“genderFemale”，“genderMale”。我们通过 "gender"一栏中的数据，在这两栏中填入 "ture "或 "false"。
-然后，我们用 "0 "表示 "假"，用 "1 "表示 "真"。
+We created 2 new columns based on this column in a new dataframe, whcih are named "genderFemale" and "genderMale". Then we filled in this 2 columns with "ture" or "false" by the data in the column "gender" and used "0" for "False", "1" for ""true.
 
 ```{r}
 gender <- userdataset1 %>%
@@ -158,9 +140,8 @@ userdataset2$genderMale <- ifelse(userdataset2$genderMale == TRUE,1,0)
 
 #### hasAnyApp
 
-From the dataset, we saw that the data for hasAnyApp is logical value. So we used "0" for "False" and "1" for ""true.
+From the dataset, we considered the data "hasAnyApp" is a logical value. So we transformed it to numeric value by setting "0" for "False" and "1" for ""true.
 
-把对错改为数字型。0:False；1:True
 
 ```{r}
 userdataset2$hasAnyApp <- ifelse(userdataset2$hasAnyApp == "True",1,0)
@@ -168,8 +149,8 @@ userdataset2$hasAnyApp <- ifelse(userdataset2$hasAnyApp == "True",1,0)
 
 #### hasProfilePicture
 
-From the dataset, we saw that the data for hasProfilePicture is logical value. So we used "0" for "False" and "1" for ""true.
-把对错改为数字型。0:False；1:True
+Similarliy, we used "0" for "False" and "1" for ""true" in order to turn "hasProfilePicture" into a numeric value.
+
 
 ```{r}
 userdataset2$hasProfilePicture <- ifelse(userdataset2$hasProfilePicture == "True",1,0)
@@ -177,7 +158,7 @@ userdataset2$hasProfilePicture <- ifelse(userdataset2$hasProfilePicture == "True
 
 #### latent
 
-The basis for determining whether a user is latent or not is "days since last login".根据daysSinceLastLogin,我们把大于180天的user判定为latent，否则为非latent。然后再把它转变为数字型。0:False；1:True
+"days since last login" is the basis how we determine a user is latent. We assume users who have been logged in for more than 180 days as latent users. We then converted this data to a numeric, defining 0 for False, 1 for True. 
 
 ```{r}
 userdataset2$latent <- ifelse(userdataset2$daysSinceLastLogin>180, TRUE, FALSE)
@@ -187,7 +168,7 @@ userdataset2$latent <- ifelse(userdataset2$latent == TRUE,1,0)
 
 ### Remove unused column
 
-在经过数据梳理过后，我们最终得到了数据表“userdataset2”，在再次查看数据之后，我们发现在上述过程中，仍然存在不需要的列，我们要删掉它们。
+After combing the data, we finally got the dataset "userdataset2". After the above data processing, we observed that there are still unnecessary columns and we prefered to hide them. (which colunms)
 
 ```{r}
 Userdataset <- userdataset2 %>% select(-1, -3, -12, -18, -24)
@@ -196,7 +177,7 @@ Userdataset <- userdataset2 %>% select(-1, -3, -12, -18, -24)
 
 ## Missing value
 
-Through checking, there is no missing value in this dataset.
+There is no missing value in this dataset.
 
 ```{r}
 check_na <- is.na(Userdataset)

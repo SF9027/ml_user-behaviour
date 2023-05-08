@@ -28,7 +28,7 @@ print(dfSummary(Userdataset,style="grid",
 
 ### Data Attribute Modification
 
-我们把数据表中的数据分为了2大类，numeric和factor。我们将"country","civilityGenderId","hasAnyApp","hasProfilePicture","langEn","langFr","langDe","langEs","langIt","genderFamale","genderMale"这些列的attribute从numeric改为factor。剩余的列的attribute从integer变为numeric。
+We will divide the data in the data table into two categories， numeric and factor. We will attribute the columns "country", "civilityGenderId", "hasAnyApp", "hasProfilePicture", "langEn", "langFr", "langDe", "langEs", "langIt", "genderFamale", "genderMale" from change numeric to factor. The attributes of the remaining columns are changed from integer to numeric.
 
 ```{r}
 library(purrr)
@@ -37,7 +37,7 @@ library(DT)
 
 Userdataset <- as.data.frame(Userdataset)
 
-Userdataset_factor <- Userdataset %>% select(1, 10, 11, 12, 15,16,17,18,19, 20, 21) %>% colnames()
+Userdataset_factor <- Userdataset %>% select(1, 10, 11, 12, 15, 16, 17, 18, 19, 20, 21) %>% colnames()
 for(i in Userdataset_factor){
     Userdataset[,i] <- as.factor(Userdataset[,i])
 } 
@@ -60,7 +60,7 @@ str(Userdataset)
 
 ### Graphs for "latent"
 
-The goal of our project is to build the model to predit whether users are latent on this platform. So here we do a comparison of users with latent statu and non-latent statu.
+The goal of our project is to build the model to predict whether users are latent on this platform. So here we make a comparison of users with latent status and non-latent status.
 
 ```{r}
 
@@ -68,7 +68,7 @@ latent <- Userdataset %>% ggplot(mapping = aes(x=latent,fill=latent))+geom_bar()
 latent
 
 ```
-从图中可以看出，数据结构极度不平衡。但造成该图的结果，可能是由于我们随机筛选造成的，对此，我们会尝试使用分组筛选。
+As can be seen from the figure, the data results are extremely unbalanced. However, the result of generating this graph may be caused by our random screening of data. So we will try to use group selection to improve this.
 
 ### Graphs for numeric variables
 
@@ -129,6 +129,42 @@ p1
 
 ```
 
+```{r}
+
+library(ggplot2)
+library(maps)
+
+# Load the world map data
+world_map <- map_data("world")
+
+# Match the country names with their respective locations
+country_loc <- data.frame(region = tolower(world_map$region),
+                          long = world_map$long,
+                          lat = world_map$lat,
+                          stringsAsFactors = FALSE)
+
+# Aggregate the user count by country
+country_count <- Userdataset %>% 
+  group_by(country) %>%
+  summarise(country_number = n())
+
+# Merge the country location data with the country count data
+country_map <- merge(country_loc, country_count, by = "region")
+
+# Plot the map
+p2 <- ggplot(country_map, aes(x = long, y = lat, group = group, fill = country_number)) +
+  geom_polygon(color = "white", size = 0.2) +
+  scale_fill_gradient(low = "white", high = "steelblue") +
+  coord_map() +
+  theme_void()
+
+# Show the map
+p2
+
+
+
+
+```
 
 ```{r}
 
