@@ -168,7 +168,7 @@ userdataset2$latent <- ifelse(userdataset2$latent == TRUE,1,0)
 
 ### Remove unused column
 
-After combing the data, we finally got the dataset "userdataset2". After the above data processing, we observed that there are still unnecessary columns and we prefered to hide them. (which colunms)
+After combing the data, we finally got the dataset "userdataset2". After the above data processing, we observed that there are still unnecessary columns and we prefered to hide them (which are index, language.x, gender.x, language.y, gender.y).
 
 ```{r}
 Userdataset <- userdataset2 %>% select(-1, -3, -12, -18, -24)

@@ -14,7 +14,7 @@ library(DataExplorer)
 
 ### Data check
 
-在这一部分，我们集中展示了所有类型的数据的结构，和简单的graph分析。从结果可以看出，很多数据的分布不均匀，所以之后，针对不同类型的数据，我们用了不同的图表来进行分析。
+In this part, we focus on the structure of all types of data, and simple graphical analysis. It can be seen from the results that the distribution of a lot of data is unbalnce, so later, we use different charts for analysis in terms of different types of data.
 
 ```{r}
 str(Userdataset)
@@ -74,22 +74,22 @@ As can be seen from the figure, the data results are extremely unbalanced. Howev
 
 #### Bar-chart
 
-为了看数据的分布情况，我们用bar-chart来展示数字型数据。
+We use bar-chart to display numerical data in order to see the distribution of data.
 
 ```{r}
 #Continuous Variables
+
 
 Userdataset %>% select(productsPassRate) %>% 
 keep(is.numeric) %>% 
   gather() %>% 
   ggplot(aes(value)) +
   facet_wrap(~ key, scales = "free") +
-  geom_
- # geom_histogram()
+  geom_histogram()
 
 
 ```
-如图所示，由于大部分user都没有该项数据，所以如图所示，数据极度不平衡。
+As shown in the figure, since most users do not have this data, the data is extremely unbalanced as shown in the figure.
 
 ```{r}
 #Discrete variables
@@ -102,7 +102,7 @@ Userdataset %>% select(2, 3, 4, 5, 6, 8, 9, 14) %>%
   geom_bar()
 
 ```
-如图所示，由于每个variables的数据都极度分散，差异过大，所以我们并不能很好的将他们可视化出来。
+As shown in the graphs, since the result of each variable is extremely scattered and the difference is too large, we cannot visualize them well.
 
 #### Box chart 
 
@@ -116,13 +116,14 @@ Userdataset %>% select(2, 3, 4, 5, 6, 7, 8, 9, 14) %>%
   geom_boxplot()
 
 ```
-由于col图的结果不太明显，我们又试着做了箱型图来看数据的差异化。但是由于数据的不均衡，所以结果也差强人意。
+Since the results of the bar chart are not obvious, we tried to make a box graph to see the difference of the data. However, due to the imbalance of the data, the results are not satisfactory.
 
 ### Graphs for non-numeric variables
 
 #### Graph for country variables
 
-针对国家这部分的数据，我们新建了一个dataframe，namedcountry。在这个列表中，我们以国家column为基础，创建了新列，统计了在Userdataset中每个国家出现的次数。新列代表的意思是在该国家中，user的数量。然后我们用不同的表来体现这部分数据。
+Concerning about country, we created a new dataframe, named country. In this list, based on the country column, we create a new column that counts the number of occurrences of each country in the Userdataset. The new column represents the number of users who are in that country. Next we use different graphs to express this part of the data.
+
 ```{r}
 
 # Bar chart
@@ -136,7 +137,9 @@ country <- Userdataset %>%
 p1
 
 ```
-从图中，我们可以看出user的国家分布也不是很均匀，而且由于国家过于多，我们决定用heatmap的形式来展现该数据。
+
+From the figure, we can see that the distribution of users in different countries is not very even, and because there are too many countries, we decided to display the data by using heat map.
+
 ```{r}
 
 # Heatmap
@@ -160,7 +163,7 @@ country_heatmap <- ggplot(country_map, aes(x = long, y = lat, group = group, fil
 print(country_heatmap)
 
 ```
-从图中，我们可以看出，该C2C网站的使用者十分分散，主要分布在北美洲，欧洲，西亚和南非。其中欧洲部分的user count最多。
+From the map, we can see that the users of this C2C website are located very scattered, mainly in North America, Europe, West Asia and South Africa. Among them, most user accounts come from European.
 
 ```{r, message=FALSE, echo=FALSE}
 
@@ -172,7 +175,8 @@ mosaicplot(user_count ~ country, data = country, color = "blue", main = "Mosaic 
 
 #### Graph for language variables
 
-针对语言，我们用柱状图来展示该数据。
+Considering languages, we display this variable by using histograms.
+
 ```{r}
 
 a <- unlist(Userdataset$langEn) 
@@ -194,11 +198,12 @@ p2 <- ggplot(LANGUAGE_DATA,aes(x=reorder(language1,number),y=number,fill=languag
 p2
 
 ```
-从图中可以看出，用户first language choice为英语的人占大多数，Es的人最少。
+We can conclude from the graph that the majority of users using English as their first language, and the least number of users are Spanish.
 
 #### Graph for gender varibles
 
-对于gender的数据，我们也用柱状图来展示。从图中，我们可以看出，女性用户远多于男性用户。
+We also use a histogram to display "gender" variable. It is obviously that female users are far more than male ones.
+
 ```{r}
 
 f <- unlist(Userdataset$genderFamale) 
@@ -217,7 +222,8 @@ p3
 
 #### Graph for other variables
 
-对于其他variables，我们也用了bar chart来集中展示。
+We also use bar chart to show all other variables.
+
 ```{r}
 
 Userdataset %>% select(civilityGenderId, hasAnyApp, hasProfilePicture) %>% 
@@ -227,11 +233,14 @@ Userdataset %>% select(civilityGenderId, hasAnyApp, hasProfilePicture) %>%
   geom_bar()
 
 ```
-从图中，我们可以看出，用户中，使用Mrs title的人占大多数。而且只有少部分人下载了该B2B e-commercial的相关app。同时，绝大部分用户都有头像。
+
+We can see that the majority of users are with "Mrs" titles. Only a small number of people have downloaded the relevant app of this C2C e-commercial platform. Besides, the vast majority of users have profile pictures.
+
 
 #### Box plot
 
-对于non-numeric 数据，我们除了以上分类分析之外，我们还用了箱型图来看其数据分布情况。
+As for non-numeric variables, in addition to the above classification analysis, we also use box plots to see the data distribution.
+
 ```{r}
 
 Userdataset %>% select(10, 11, 12, 15,16,17,18,19, 20, 21) %>% 
@@ -269,9 +278,11 @@ plot_correlation(UserdatasetP, type= 'c', cor_args = list( 'use' = 'complete.obs
 ```
 从2个图中，我们可以看到各个numeric variables之间的相关性。显而易见地，Var.seniority和其他有变量基本都没有什么相关性。而var.productsSold，socialProductsLiked，socialNbFollows和socialNbFollowers之间的相关性更强。
 
+From these two graphs, we can observe the correlation between the numeric variables. Obviously, "seniority" has basically no correlation with other variables. Whereas "productsSold", "socialProductsLiked", "socialNbFollows" and "socialNbFollowers" have stronger correlations among each other.
+
 ### Mosaic Chart - Non-numeric 
 
-对于non—numeric variables，我们用mosaic plot来展示每个变量与latent的相关性。
+We use mosaic plot to show the correlation of each non-numeric variable with latency. 
 
 ```{r, message=FALSE}
 
@@ -290,12 +301,17 @@ for (i in 1:24){
 
 
 # Next step
-有关数据的部分：
-1. 由于原数据集过大，导致中途运行时出现了运行内存不足的情况，所以我们随机筛选了部分数据来进行分析。为了保证数据的结构与原数据集基本一致，我们决定采用分组抽样（把国家作为分组标准）来筛选。
-2. 不论是原始数据，还是我们筛选出来的数据，其latent的用户都非常多。为了使研究更明确，我们下一步可能会细分用户类型（细化指标），比如latent用户：daysSinceLastLogin取值为[90,365]。而超过365天没有登陆的人，则可认为是missing_user，即默认其日后也不会登陆该网站，没有处理的必要。
-3. 在处理数据时，考虑到后续要使用不同的模型，我们将文字型数据都用数字来表示了，这个有必要么？对于国家column，由于国家数量过多，所以我们保留了文字型。如果后续建模不支持使用文字型数据，我们要怎么处理“国家column”这部分数据？
 
-问题：
-1.在展示numeric数据的部分，bar—chart和box-chart的结果都不是很好，有可视化的建议？比如还能用什么别的图表来显示？
-2.
-2.因为根据eda，很多变量之间的相关性都不算很大，对于接下来的工作，您有什么建议？
+About the data:
+1. Due to the large size of original dataset, running memory was insufficient during data processing, so we randomly filtered the data for analysis. In order to ensure the structure of the data is consistent with the original dataset, we decided to use group sampling (considering countries as a grouping criteria) to select the data.
+2. Whether the original data or the data we selected, there are a large amount number of latent users. In order to obtain more accurate research results, we will consider to segment user types (set refinement indicators) in the next step, such as latent users belong to the value of daysSinceLastLogin between [90, 365]. While those who have not logged in for more than 365 days will be regarded as missing user. Which means they will not log in to this website by default in the future, so that there is no need to deal with them.
+
+Questions:
+1. When processing the data, considering that we will use different models after, we replaced all text data by numbers. Is this necessary to do so? 
+
+2. For the country column, we keep them as "character" due to the large number of countries counts. What if it do not support the "character" data when we set models after, how should we deal with the data of the "country" column?
+
+3. In the section of displaying numeric data, we consider the results of bar-chart and box-chart are not very good. Do you have any suggestions for visualization? For example, what other charts can be used to better display numeric data?
+
+
+2.According to eda, we noticed the correlation between many variables is not very strong, and we are afraid it will be difficult to work the project out. Do you have any suggestions for the next steps?
