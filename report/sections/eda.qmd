@@ -279,7 +279,7 @@ We use mosaic plot to show the correlation of each non-numeric variable with lat
 
 cat_table <- Userdataset %>% select(10, 11, 12, 15, 16, 17, 18, 19, 20, 21, 22) 
 plot_list=list()
-for (i in 1:24){
+for (i in 1:11){
   print(mosaicplot(~ cat_table[[i]] + cat_table[[11]], 
                    data = cat_table,
                    main = "Mosaic Plot between latent and each variable",
